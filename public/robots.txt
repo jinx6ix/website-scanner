@@ -1,0 +1,10 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and auth pages
+Disallow: /dashboard/
+Disallow: /auth/
+
+# Sitemap location
+Sitemap: https://securescan.app/sitemap.xml
