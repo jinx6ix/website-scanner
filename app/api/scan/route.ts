@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { performVulnerabilityScan } from "@/lib/scanner/vulnerability-scanner"
+import { waitUntil } from "@vercel/functions" // Import waitUntil
 
 export async function POST(request: Request) {
   try {
@@ -43,10 +44,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Failed to create scan" }, { status: 500 })
     }
 
-    // Perform scan asynchronously
-    performVulnerabilityScan(scan.id, url).catch((error) => {
+    // Perform scan asynchronously with waitUntil
+    waitUntil(performVulnerabilityScan(scan.id, url).catch((error) => {
       console.error("[v0] Scan error:", error)
-    })
+    }))
 
     return NextResponse.json({ scanId: scan.id, status: "running" })
   } catch (error) {
